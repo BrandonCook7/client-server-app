@@ -7,6 +7,7 @@ class Client():
     def __init__(self, port):
         self.port = port
         self.host = ""
+
     def send(self, sock, send_data):
         choice = ""
         while(choice.lower() not in choice_strings):
@@ -40,6 +41,7 @@ class Client():
         elif choice.lower() == "quit":
             print("Shutting Down...")
             return -1
+
     def recieve(self, sock):
         rec_data = sock.recv(1024).decode()
         if rec_data[0] == "$":
@@ -59,6 +61,7 @@ class Client():
             print("Completed downloading file")
         else:
             print("Server: " + str(rec_data))
+
     def run(self):
         sock = socket.socket()
         self.host = socket.gethostname()

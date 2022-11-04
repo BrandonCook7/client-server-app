@@ -1,13 +1,12 @@
 import socket
 
-
 choice_strings = ['m', 'f']
 
 class Server():
     def __init__(self, port):
         self.port = port
         self.host = ""
-    def send(self, sock, conn):
+    def send(self, conn):
         choice = ""
         while(choice.lower() not in choice_strings):
             print("Send a message or file (M/F)?: ")
@@ -55,6 +54,7 @@ class Server():
             print("Completed downloading file")
         else:
             print("Client: " + str(rec_data))
+
     def run(self):
         sock = socket.socket()
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -67,7 +67,7 @@ class Server():
         while True:
             if self.recieve(conn) == -1:
                 break
-            self.send(sock, conn)
+            self.send(conn)
         conn.close()
 
 def main():
