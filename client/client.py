@@ -41,7 +41,9 @@ class Client():
         elif choice.lower() == "quit":
             print("Shutting Down...")
             return -1
-
+    def recieve(self, sock):
+        rec_data = sock.recv(1024).decode()
+        print("Server: " + str(rec_data))
     def run(self):
         sock = socket.socket()
         self.host = socket.gethostname()
@@ -54,9 +56,7 @@ class Client():
         while send_data.lower() != "quit":
             if self.send(sock, send_data) == -1:
                 break
-            rec_data = sock.recv(1024).decode()
-            print("Server: " + str(rec_data))
-
+            self.recieve(sock)
         sock.close()
 
 def main():
