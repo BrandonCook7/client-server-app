@@ -1,14 +1,39 @@
 import socket
 
+
+choice_strings = ['m', 'f']
+
 class Server():
     def __init__(self, port):
         self.port = port
         self.host = ""
     def send(self, sock, conn):
-        print("To Client: ", end = "")
-        send_data = input()
-        if send_data:
-            conn.send(send_data.encode())
+        choice = ""
+        while(choice.lower() not in choice_strings):
+            print("Send a message or file (M/F)?: ")
+            choice = input()
+        if choice.lower() == "m":
+            print("To Client: ", end = "")
+            send_data = input()
+            if send_data:
+                conn.send(send_data.encode())
+        elif choice.lower() == "f":
+            print("Enter File Name -> ", end = "")
+            send_data = input()
+
+            file_loc = send_data
+            f = open(file_loc, 'rb')
+            modded_data = "$" + f.name
+            conn.send(modded_data.encode())
+
+            read = f.read(1024)
+            while(read):
+                print("Sending Data...")
+                conn.send(read)
+                read = f.read(1024)
+            f.close()
+            print("Sent " + f.name + " to client")
+
     def recieve(self, conn):
         rec_data = conn.recv(1024).decode()
         if not rec_data:

@@ -22,8 +22,7 @@ class Client():
                 sock.send(send_data.encode())
             
         elif choice.lower() == "f":
-            print("File")
-            print("File Name: ", end = "")
+            print("Enter File Name -> ", end = "")
             send_data = input()
             
             file_loc = send_data
@@ -43,7 +42,23 @@ class Client():
             return -1
     def recieve(self, sock):
         rec_data = sock.recv(1024).decode()
-        print("Server: " + str(rec_data))
+        if rec_data[0] == "$":
+            #Client is sending a file
+            file_name = rec_data[1:]
+            print("Writing to " + file_name)
+            f = open(file_name, 'w')
+            rec_data = sock.recv(1024).decode()
+            while rec_data != "":
+                f.write(rec_data)
+                print("Writing Data...")
+                if len(rec_data) == 1024:
+                    rec_data = sock.recv(1024).decode()
+                else:
+                    rec_data = ""
+            f.close()
+            print("Completed downloading file")
+        else:
+            print("Server: " + str(rec_data))
     def run(self):
         sock = socket.socket()
         self.host = socket.gethostname()
